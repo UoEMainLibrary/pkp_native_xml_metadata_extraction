@@ -18,15 +18,12 @@ args = parser.parse_args()
 
 NS = {"pkp": "http://pkp.sfu.ca"}
 
-
 def first_text(elem, xpath):
     node = elem.find(xpath, NS)
     return node.text.strip() if node is not None and node.text else ""
 
-
 def sanitise(value):
     return "".join(c if c.isalnum() or c in " ._-" else "_" for c in value).strip()
-
 
 root = ET.parse(args.input_xml).getroot()
 output_dir = Path(args.output_dir)
@@ -59,6 +56,8 @@ for issue in root.findall("pkp:issue", NS):
         stem = sanitise(f"{surname} - {issue_title}")
 
         for sf in article.findall("pkp:submission_file", NS):
+            if sf.get("stage") != "proof":
+                continue
             for file_elem in sf.findall("pkp:file", NS):
                 if file_elem.get("extension", "").lower() != "pdf":
                     continue
