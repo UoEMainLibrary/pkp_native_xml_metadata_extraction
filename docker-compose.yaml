@@ -1,0 +1,19 @@
+services:
+  convert_ojs_xml:
+    image: python:3.12-slim
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: >
+      python convert_ojs_xml.py
+      --input_xml native-20260612-122023-issues-2.xml
+      --output_csv output.csv
+  extract_ojs_pdfs:
+    image: python:3.12-slim
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: >
+      python extract_pdfs.py
+      --input_xml native-20260612-122023-issues-2.xml
+      --output_dir /app/pdfs
